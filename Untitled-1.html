@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            margin: 100px;
+        }
+        .field{
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #cccccc;
+        }
+        .excel{
+            width: 50px;
+            height: 50px;
+            padding: 5px;
+        }
+        .snakeBody{
+            background-color: black;
+
+        }
+        .head{
+            background-color: red;
+        }
+        .mouse{
+            background-color: green;
+        }
+    </style>
+</head>
+
+
+
+
+
+<body>
+    <script>
+        /* create gaming field */
+        let field = document.createElement('div');
+        field.classList.add('field')
+        document.body.appendChild(field);
+        
+        for (let i = 0; i < 100; i++) {
+            let excel = document.createElement('div');
+            field.appendChild(excel);
+            excel.classList.add('excel');
+            
+            
+        }
+/* create cells */
+        let excels = document.querySelectorAll('.excel');
+        /* console.log(excels); */
+        
+            let x = 1;
+            let y = 10;
+
+/* create coordinates */
+       for (let i = 0; i < excels.length; i++) {
+            if( x>10){
+                x =1; 
+                y--;
+            }
+            excels[i].setAttribute('posX', x);
+            excels[i].setAttribute('posy', y);
+            x++;
+            
+            
+          
+       }
+
+/* random func */
+
+function random(min, max){
+   return Math.round(Math.random()*(max-min)+min);
+}
+/* create snake and mouse */
+function generateSnake(){
+    let posX = random(3, 10);
+    let posY = random(3, 10);
+    return [posX, posY];
+}
+function createMouse(){
+    
+    function generateMouse(){
+    let posX = random(0, 10);
+    let posY = random(0, 10);
+    return [posX, posY];
+    }
+
+        let mouse;
+        let mouseCoordinates = generateMouse();
+
+    mouse  = document.querySelector(`[posX="${mouseCoordinates[0]}"][posY="${mouseCoordinates[1]}"]`);
+
+        
+    while (mouse.hasAttribute(`[posX="${mouseCoordinates[0]}"][posY="${mouseCoordinates[1]}"]`) === firstCell.hasAttribute(`[posX="${coordinatesOfSnake[0]}"][posY="${coordinatesOfSnake[1]}"]`)
+    || mouse.hasAttribute(`[posX="${mouseCoordinates[0]}"][posY="${mouseCoordinates[1]}"]`) === firstCell.hasAttribute(`[posX="${(coordinatesOfSnake[0]-1)}"][posY="${coordinatesOfSnake[1]}"]`)
+    || mouse.hasAttribute(`[posX="${mouseCoordinates[0]}"][posY="${mouseCoordinates[1]}"]`) === firstCell.hasAttribute(`[posX="${(coordinatesOfSnake[0]-2)}"][posY="${coordinatesOfSnake[1]}"]`)){
+
+       let mouseCoordinates = generateMouse();
+        mouse  = document.querySelector(`[posX="${mouseCoordinates[0]}"][posY="${mouseCoordinates[1]}"]`);
+
+    }
+
+    console.log(mouse);
+
+    mouse.classList.add('mouse');
+
+
+}
+
+
+
+let coordinatesOfSnake = generateSnake();
+let firstCell = document.querySelector(`[posX="${coordinatesOfSnake[0]}"][posY="${coordinatesOfSnake[1]}"]`),
+    secondCell = document.querySelector(`[posX="${(coordinatesOfSnake[0]-1)}"][posY="${coordinatesOfSnake[1]}"]`),
+    thirdCell = document.querySelector(`[posX="${(coordinatesOfSnake[0])-2}"][posY="${coordinatesOfSnake[1]}"]`);
+console.log(thirdCell);
+
+let snakeBody = [firstCell, secondCell, thirdCell];
+
+snakeBody[0].classList.add('head');
+
+
+for (let i = 1; i < snakeBody.length; i++) {
+    
+    snakeBody[i].classList.add('snakeBody');
+    
+}
+
+
+
+createMouse();
+
+
+    </script>
+</body>
+</html>

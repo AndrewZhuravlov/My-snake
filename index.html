@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+        body{
+            margin: 100px;
+        }
+        .field{
+            width: 500px;
+            height: 500px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            background-color: #cccccc;
+        }
+        .excel{
+            width: 50px;
+            height: 50px;
+            padding: 5px;
+        }
+        .snakeBody{
+            background-image: url(belly.jpg);
+            background-position: center ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 25%;
+
+        }
+        .head{
+            background-image: url(me.jpg);
+            background-position: center ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            border-radius: 25%;
+        }
+        .mouse{
+            background-image: url(beer.jpg);
+            background-position: center ;
+            background-repeat: no-repeat;
+            background-size: cover;
+            
+        }
+    </style>
+</head>
+
+
+
+
+
+<body>
+    <script>
+        /* create gaming field */
+        let field = document.createElement('div');
+        field.classList.add('field')
+        document.body.appendChild(field);
+        
+        for (let i = 0; i < 100; i++) {
+            let excel = document.createElement('div');
+            field.appendChild(excel);
+            excel.classList.add('excel');
+            
+            
+        }
+/* create cells */
+        let excels = document.querySelectorAll('.excel');
+        /* console.log(excels); */
+        
+            let x = 1;
+            let y = 10;
+
+/* create coordinates */
+       for (let i = 0; i < excels.length; i++) {
+            if( x>10){
+                x =1; 
+                y--;
+            }
+            excels[i].setAttribute('posX', x);
+            excels[i].setAttribute('posy', y);
+            x++;
+            
+            
+          
+       }
+
+/* random func */
+
+function random(min, max){
+   return Math.round(Math.random()*(max-min)+min);
+}
+/* create snake and mouse */
+function generateSnake(){
+    let posX = random(3, 10);
+    let posY = random(3, 10);
+    return [posX, posY];
+}
+
+function generateMouse(){
+    let posX = random(1, 10);
+    let posY = random(1, 10);
+    return [posX, posY];
+}
+
+function snakeCreaterFun(){
+
+if(snakeBody[0].classList.contains('snakeBody')){
+    
+    gameOver();
+    
+}
+
+    snakeBody[0].classList.add('head');
+        for (let i = 1; i < snakeBody.length; i++) {
+        
+         snakeBody[i].classList.add('snakeBody');
+        
+    }
+}
+
+function createMouse(){
+    mouse  = document.querySelector(`[posX="${mouseCoordinates[0]}"][posY="${mouseCoordinates[1]}"]`);
+    while (mouse.classList.contains('snakeBody') || mouse.classList.contains('head')){
+
+        mouseCoordinates = generateMouse();
+        mouse  = document.querySelector(`[posX="${mouseCoordinates[0]}"][posY="${mouseCoordinates[1]}"]`);
+
+    }
+
+
+mouse.classList.add('mouse');
+}
+
+function gameOver(){
+
+     clearInterval(interval);
+    field.insertAdjacentHTML('beforebegin', `
+   <h1 style = "display : flex; justify-content : center;" id="h1" >Ваш Результат: + ${counter} Килограмма</h1> `)
+    
+
+}
+let counter = 0;
+let coordinatesOfSnake = generateSnake();
+let firstCell = document.querySelector(`[posX="${coordinatesOfSnake[0]}"][posY="${coordinatesOfSnake[1]}"]`),
+    secondCell = document.querySelector(`[posX="${(coordinatesOfSnake[0]-1)}"][posY="${coordinatesOfSnake[1]}"]`),
+    thirdCell = document.querySelector(`[posX="${(coordinatesOfSnake[0])-2}"][posY="${coordinatesOfSnake[1]}"]`);
+
+
+let snakeBody = [firstCell, secondCell, thirdCell];
+console.log(snakeBody);
+
+
+
+
+
+
+snakeCreaterFun();
+
+
+
+let mouse;
+let steps = false;
+
+let mouseCoordinates = generateMouse();
+
+createMouse();
+
+    
+
+let direction  ='right';
+
+function moveBitch(){
+   let snakeCoordins = [snakeBody[0].getAttribute('posX'), snakeBody[0].getAttribute('posY') ];
+    snakeBody[0].classList.remove('head');
+    snakeBody[snakeBody.length-1].classList.remove('snakeBody');
+    snakeBody.pop();
+    if(direction === 'right'){
+        if(snakeCoordins[0]<10){
+        snakeBody.unshift(document.querySelector(`[posX="${(+snakeCoordins[0]+1)}"][posY="${snakeCoordins[1]}"]`));
+        snakeCreaterFun();
+        }else{
+            snakeBody.unshift(document.querySelector(`[posX="1"][posY="${snakeCoordins[1]}"]`));
+        snakeCreaterFun();
+        }
+    }else if(direction === 'left'){
+
+        if(snakeCoordins[0]>1){
+        snakeBody.unshift(document.querySelector(`[posX="${(+snakeCoordins[0]-1)}"][posY="${snakeCoordins[1]}"]`));
+        snakeCreaterFun();
+        }else{
+            snakeBody.unshift(document.querySelector(`[posX="10"][posY="${snakeCoordins[1]}"]`));
+        snakeCreaterFun();
+        }
+
+    }else if(direction === 'up'){
+
+        if(snakeCoordins[1]<10){
+        snakeBody.unshift(document.querySelector(`[posX="${(+snakeCoordins[0])}"][posY="${(+snakeCoordins[1]+1)}"]`));
+        snakeCreaterFun();
+        }else{
+            snakeBody.unshift(document.querySelector(`[posX="${snakeCoordins[0]}"][posY="1"]`));  /* ${snakeCoordins[1]} */
+        snakeCreaterFun();
+        }
+    }else if(direction === 'down'){
+
+        if(snakeCoordins[1]>1){
+        snakeBody.unshift(document.querySelector(`[posX="${(+snakeCoordins[0])}"][posY="${(+snakeCoordins[1]-1)}"]`));
+        snakeCreaterFun();
+        }else{
+            snakeBody.unshift(document.querySelector(`[posX="${snakeCoordins[0]}"][posY="10"]`));  /* ${snakeCoordins[1]} */
+        snakeCreaterFun();
+        }
+       
+ 
+    }  
+    
+    
+    if(snakeBody[0].getAttribute('posX') === mouse.getAttribute('posX') && snakeBody[0].getAttribute('posY') === mouse.getAttribute('posY')){
+        mouse.classList.remove('mouse');
+        let a  = snakeBody[snakeBody.length-1].getAttribute('posX');
+        let b  = snakeBody[snakeBody.length-1].getAttribute('posY');
+        snakeBody.push(document.querySelector(`[posX="${a}"][posY="${b}"]`));
+        createMouse();
+        counter++;
+    }
+    
+
+   steps = true;
+
+}
+
+
+
+window.addEventListener('keydown', (ev)=>{
+    if(steps == true){
+       if(ev.keyCode === 37 && direction!== 'right'  ){
+ 
+        direction = 'left';
+            steps=false;
+    }else if(ev.keyCode === 38 && direction !== 'down' ){
+
+        direction = 'up';
+            steps=false;
+    }else if(ev.keyCode === 39 && direction !== 'left' ){
+
+        direction = 'right';
+            steps=false;
+    }else if(ev.keyCode === 40 && direction !== 'up' ){
+
+        direction = 'down';
+            steps=false;
+    } 
+    }
+    
+})
+let interval = setInterval(moveBitch,300);
+    </script>
+</body>
+</html>
